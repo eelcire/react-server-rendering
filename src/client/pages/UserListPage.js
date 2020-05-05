@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchUsers } from "../actions";
+import { Helmet } from "react-helmet";
 
 class UserList extends Component {
   componentDidMount() {
@@ -13,9 +14,19 @@ class UserList extends Component {
     });
   }
 
+  head() {
+    return (
+      <Helmet>
+        <title>{`${this.props.users.length} Users Loaded`}</title>
+        <meta propery="og:title" content="users App" />
+      </Helmet>
+    );
+  }
+
   render() {
     return (
       <div>
+        {this.head()}
         Here's a big list of users:
         <ul>{this.renderUsers()}</ul>
       </div>
@@ -31,5 +42,7 @@ function loadData(store) {
   return store.dispatch(fetchUsers());
 }
 
-export { loadData };
-export default connect(mapStateToProps, { fetchUsers })(UserList);
+export default {
+  loadData,
+  component: connect(mapStateToProps, { fetchUsers })(UserList),
+};
